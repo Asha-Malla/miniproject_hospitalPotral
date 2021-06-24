@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="fab.css">
+ 
+</head>
+<body>
+  
+  <div class="fab-icon-holder" onclick="signout()" style="align-content:right;">
+  <i class="fas fa-sign-out-alt" ></i>
+</div>
+
+<h1>Doctor Details</h1>
+
+<table id="t01">
+  <tr class="doctor-info">
+    <th>Name</th>
+    <th>Doctor ID</th>
+    <th>Email ID</th>
+    <th>Experience</th>
+    <th>Qualificaton</th>
+    <th>Category</th>
+  </tr>
+  <tbody id="validateTable"></tbody>
+</table>
+<div class=”float-button”></div>
+
+  <div class="fab-container">
+    <div class="fab fab-icon-holder">
+      <i class="fas fa-question"></i>
+    </div>
+
+    <ul class="fab-options">
+      <li>
+        
+        <span class="fab-label" onclick="create()">Create</span>
+        <div class="fab-icon-holder" onclick="create()">
+          <i class="fas fa-regular fa-plus"></i>
+        </div>
+      </li>
+      <li>
+        <span class="fab-label" onclick="delete1()">Delete</span>
+        <div class="fab-icon-holder" onclick="delete1()">
+          <i class="fas fa-solid fa-trash"></i>
+        </div>
+      </li>
+      <li>
+        <span class="fab-label" onclick="update()">Update</span>
+        <div class="fab-icon-holder" onclick="update()" >
+        <i class="fas fa-solid fa-pen"></i>
+        </div>
+      </li>
+      
+    </ul>
+  </div>
+
+
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+  
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+       https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+  
+  <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+      apiKey: "AIzaSyBYK0eooSqAG58zVar-w7gNGQAPnOeeEo8",
+      authDomain: "sample-project-1062021.firebaseapp.com",
+      projectId: "sample-project-1062021",
+      storageBucket: "sample-project-1062021.appspot.com",
+      messagingSenderId: "145333304522",
+      appId: "1:145333304522:web:c642e3c6708c6a7df78833",
+      measurementId: "G-DNW7B4YDG0"
+    
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  
+    const userauth=firebase.auth();
+    const db=firebase.firestore();
+  
+    db.settings({timestampsInSnapshots: true});
+  </script>
+
+
+  <script>
+    var x= document.getElementById("Create");
+    var y= document.getElementById("register");
+    var z= document.getElementById("btn");
+    var h_id = sessionStorage.getItem('h_id');
+
+    alert(h_id);
+    //var d_id=document.getElementById("d_id").value;
+    
+
+    db.collection("doctors").orderBy("d_id").startAt(h_id).endAt(h_id+'\uf8ff')//.where("d_id", ">=", h_id).where("d_id","<=",h_id)
+    .onSnapshot((querySnapshot) => {
+        var info= [];
+        querySnapshot.forEach((doc) => {
+            info.push(doc.data());
+        });
+        //console.log("Current cities in CA: ", cities.join(", "));
+       // buildTable(appointments);
+        //console.log(cities[0]);
+        console.log(info);
+        buildTable(info);
+    });
+
+    
+   // var h_id1=document.getElementById("d_id").value;
+    
+/*
+    db.collection("hospital").where("h_id", "==", h_id)
+    .onSnapshot((querySnapshot) => {
+        var details= [];
+        querySnapshot.forEach((doc) => {
+            details.push(doc.data());
+        });*/
+        //console.log("Current cities in CA: ", cities.join(", "));
+       
+       /* var info=[];
+        for(var i=0;i<details.length;i++){
+          
+    
+
+    db.collection("doctors").where("d_id", "==", details.d_id)
+    .onSnapshot((querySnapshot) => {
+        var appointments= [];
+        querySnapshot.forEach((doc) => {
+            appointments.push(doc.data());
+        });
+        //console.log("Current cities in CA: ", cities.join(", "));
+        buildTable(appointments);
+        //console.log(cities[0]);
+    });
+
+
+        }
+        buildTable(appointments);*/
+        //console.log(cities[0]);
+    //});
+
+    function buildTable(data){
+    var table=document.getElementById('validateTable');
+    if(data.length==0){
+        //No data;
+    }
+    for(var i=0;i<data.length;i++){
+       var row=`<tr>
+        <td>${data[i].d_name}</td>
+        <td>${data[i].d_id}</td>
+        <td>${data[i].d_email}</td>
+        <td>${data[i].d_age}</td>
+        <td>${data[i].d_specialization}</td>
+        <td>${data[i].d_area}</td>
+        </tr>`
+        table.innerHTML+=row
+    }
+}
+
+
+
+  
+    function create() {
+      //alert("Button pressed");
+      window.location="createpage.html";
+  /*var x = document.forms["myForm"]["fname"].value;
+    if (x == "") {
+      alert("Name must be filled out");
+      return false;*/
+  
+    }
+    function delete1(){
+      
+      window.location="deletepage.html";
+
+    }
+    function update() {
+      window.location="validationpage.html";
+    }
+    
+    function signout(){
+
+      firebase.auth().signOut().then(() => {
+  alert("Sign-out successful.");
+  window.location.replace("index.html");
+}).catch((error) => {
+  alert("An error happened.");
+});
+    }
+
+  </script>
+
+</body>
+</html>

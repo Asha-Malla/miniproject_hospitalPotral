@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="fab.css">
+</head>
+<body>
+
+  <script>
+  var x= document.getElementById("Create");
+  var y= document.getElementById("register");
+  var z= document.getElementById("btn");
+
+  function Create() {
+    alert("Button pressed");
+    
+/*var x = document.forms["myForm"]["fname"].value;
+  if (x == "") {
+    alert("Name must be filled out");
+    return false;*/
+
+
+
+
+  }
+  
+  
+</script>
+
+<h1>Doctor Details</h1>
+
+<table id="t01">
+  <tr>
+    <th>Name</th>
+    <th>Doctor ID</th>
+    <th>Specialisation</th>
+
+    <th>Experience</th>
+    <th>Appointments</th>
+  </tr>
+  <tr>
+    <td>Jill</td>
+    <td>53004601101</td>
+    <td>General Physician</td>
+    <td>20</td>
+    <td>5</td>
+  </tr>
+  <tr>
+    <td>Eve</td>
+    <td>53004601102</td>
+    <td>Dermatoligist</td>
+    <td>15</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>Jack</td>
+    <td>53004601103</td>
+    <td>General Physician</td>
+    <td>5</td>
+    <td>5</td>
+  </tr>
+</table>
+<div class=”float-button”></div>
+
+  <div class="fab-container">
+    <div class="fab fab-icon-holder">
+      <i class="fas fa-question"></i>
+    </div>
+
+    <ul class="fab-options">
+      <li>
+        <button type="button"  onclick="Create()">Create</button>
+
+        <div class="fab-icon-holder">
+          <i class="fas fa-regular fa-plus"></i>
+        </div>
+      </li>
+      <li>
+        <span class="fab-label">Delete</span>
+        <div class="fab-icon-holder">
+          <i class="fas fa-solid fa-trash"></i>
+        </div>
+      </li>
+      <li>
+        <span class="fab-label">Update</span>
+        <div class="fab-icon-holder">
+        <i class="fas fa-solid fa-pen"></i>
+        </div>
+      </li>
+      
+    </ul>
+  </div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

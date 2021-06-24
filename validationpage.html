@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+	<title>Validate Appointments</title>
+	<link rel="stylesheet" href="createpage.css">
+    <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+</head>
+<body>
+    
+    <div class="form-box">
+      
+      
+       
+        <div id="register" class="input-group">
+        	<h1>GET APPOINTMENTS</h1>
+        	<fieldset>
+        
+        <input type="text" class="input-field" id="d_id" placeholder="Enter last 2 digits in Doctor ID (01-99)" required>
+         <button type="submit" class="submit-btn" onclick="validate()">INFO</button>
+        
+</fieldset>
+</div>
+<div class="form-box">
+      
+      
+       
+    <div id="register1" class="inputgrp">
+        <h1>VALIDATE APPOINTMENTS</h1>
+        <fieldset>
+    
+    <input type="text" class="input-field" id="app_id" placeholder="Appointment ID" required>
+    <h2>STATUS</h2>
+    completed<input type="radio" class="input-field" id="status1" name="status" value="completed">
+    canceled<input type="radio" class="input-field" id="status2" name="status" value="canceled">
+    successful<input type="radio" class="input-field" id="status3" name="status" value="successful">
+     <button type="submit" class="submit-btn" onclick="update()">UPDATE</button>
+    
+</fieldset>
+</div>
+
+    </div>
+
+    <table id="t01">
+        <tr class="info">
+            <th>Appointment ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Phone No.</th>
+            <th>Symptoms</th>
+            <th>Status</th>
+        </tr>
+        <tbody id="validateTable">
+
+        </tbody>
+    </table>
+
+    
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyBYK0eooSqAG58zVar-w7gNGQAPnOeeEo8",
+    authDomain: "sample-project-1062021.firebaseapp.com",
+    projectId: "sample-project-1062021",
+    storageBucket: "sample-project-1062021.appspot.com",
+    messagingSenderId: "145333304522",
+    appId: "1:145333304522:web:c642e3c6708c6a7df78833",
+    measurementId: "G-DNW7B4YDG0"
+  
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  const userauth=firebase.auth();
+  const db=firebase.firestore();
+
+  db.settings({timestampsInSnapshots: true});
+</script>
+<script>
+
+function validate(){
+
+    //var d_id=document.getElementById("d_id").value;
+    
+    var d_id1=document.getElementById("d_id").value;
+    var h_id=sessionStorage.getItem('h_id');
+    var l=d_id1.length;
+  
+  if(l<2){
+    d_id1='0'+d_id1;
+  }
+  
+  var d_id=h_id+d_id1;
+  alert("Doctor ID: "+d_id); 
+
+    db.collection("appointments").where("d_id", "==", d_id).where("status","in",["queued","successful"])
+    .onSnapshot((querySnapshot) => {
+        var appointments= [];
+        querySnapshot.forEach((doc) => {
+            appointments.push(doc.data());
+        });
+        //console.log("Current cities in CA: ", cities.join(", "));
+        buildTable(appointments);
+        //console.log(cities[0]);
+    });
+}
+
+function buildTable(data){
+    var table=document.getElementById('validateTable');
+    if(data.length==0){
+        //No data;
+    }
+    for(var i=0;i<data.length;i++){
+       var row=`<tr>
+        <td>${data[i].app_id}</td>
+        <td>${data[i].name}</td>
+        <td>${data[i].age}</td>
+        <td>${data[i].phone}</td>
+        <td>${data[i].symptoms}</td>
+        <td>${data[i].status}</td>
+        </tr>`
+        table.innerHTML+=row
+    }
+}
+
+function update(){
+    var app_id=document.getElementById("app_id").value;
+    var status=document.getElementById("status1").value;
+    var status=document.getElementById("status2").value;
+    var status=document.getElementById("status3").value;
+    //alert(status);
+    var status;
+    if(status1.checked==true){
+      status="completed"
+    }
+    if(status2.checked==true){
+      status="canceled"
+    }
+    if(status3.checked==true){
+      status="successful"
+    }
+    alert(status);
+    db.collection("appointments").doc(app_id).update({
+        "status" : status,
+    })
+    .then(() => {
+        alert("Document successfully written!");
+        window.location="validationpage.html";
+    })
+    .catch((error) => {
+        alert("Error writing document: ", error);
+    });
+}
+
+</script>
+</body>
+</html>

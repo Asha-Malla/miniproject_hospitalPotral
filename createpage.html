@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+	<title>Add or Update Doctor</title>
+	<link rel="stylesheet" href="createpage.css">
+</head>
+<body>
+    
+    <div class="form-box">
+      
+      
+       
+        <div id="register" class="input-group">
+        	<h1>ADD A DOCTOR OR UPDATE DOCTOR PROFILE</h1>
+        	<fieldset>
+        <input type="text" class="input-field" id="name" placeholder="Name" required>
+        <input type="text" class="input-field" id="email" placeholder="E-mail" required>
+         <input type="number" class="input-field" id="exp" min="0" placeholder="Experience" required>
+         <input type="text" class="input-field" id="qlf" placeholder="Qualification" required>
+          <input type="text" class="input-field" id="ctg" placeholder="Category" required>
+        <input type="text" class="input-field" id="d_id" placeholder="Enter last 2 digits in Doctor ID (01-99)" required>
+         <button type="submit" class="submit-btn" onclick="create()" >ADD</button>
+         <button type="submit" class="submit-btn" onclick="update()" >UPDATE</button>
+        
+</fieldset>
+</div>
+
+    </div>
+
+    
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyBYK0eooSqAG58zVar-w7gNGQAPnOeeEo8",
+    authDomain: "sample-project-1062021.firebaseapp.com",
+    projectId: "sample-project-1062021",
+    storageBucket: "sample-project-1062021.appspot.com",
+    messagingSenderId: "145333304522",
+    appId: "1:145333304522:web:c642e3c6708c6a7df78833",
+    measurementId: "G-DNW7B4YDG0"
+  
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  const userauth=firebase.auth();
+  const db=firebase.firestore();
+
+  db.settings({timestampsInSnapshots: true});
+</script>
+<script>
+
+ function create() {
+    var name=document.getElementById("name").value;
+    var email=document.getElementById("email").value;
+    var exp=document.getElementById("exp").value;
+    var qlf=document.getElementById("qlf").value;
+    var ctg=document.getElementById("ctg").value;
+    var d_id1=document.getElementById("d_id").value;
+    var h_id=sessionStorage.getItem('h_id');
+    var l=d_id1.length;
+  
+  if(l<2){
+    d_id1='0'+d_id1;
+  }
+  
+  var d_id=h_id+d_id1;
+  alert("Doctor ID: "+d_id);  
+
+  const usersRef = db.collection('doctors').doc(d_id);
+var h_id;
+usersRef.get()
+  .then((docSnapshot) => {
+    if (docSnapshot.exists) {
+      alert("Doctor ID already taken!!! Try choosing another ID.😊😊");
+      return;
+    } else {
+
+    var h_name;
+    db.collection("hospital").doc(h_id).get().then((doc) => {
+    if (doc.exists) {
+        console.log("Document data:", doc.data());
+        h_name= doc.data().name;
+        //h_name="abc";
+        //alert("hi "+doc.data().name);
+        db.collection("doctors").doc(d_id).set({
+        d_name: name,
+        d_specialization:qlf,
+        d_area:ctg,
+        d_id:d_id,
+        d_age:exp,
+        d_email:email,
+        h_id:h_id,
+        h_name:h_name,
+    })
+    .then(() => {
+        alert("Document successfully written!");
+        window.location="homepage.html";
+    })
+    .catch((error) => {
+        alert("Error writing document: ", error);
+    });
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }
+}).catch((error) => {
+    console.log("Error getting document:", error);
+});
+
+      
+
+   /*   db.collection("doctors").doc(d_id).set({
+        d_name: name,
+        d_specialization:qlf,
+        d_area:ctg,
+        d_id:d_id,
+        d_age:exp,
+        d_email:email,
+        h_id:h_id,
+        h_name:h_name,
+    })
+    .then(() => {
+        alert("Document successfully written!");
+        window.location="homepage.html";
+    })
+    .catch((error) => {
+        alert("Error writing document: ", error);
+    });*/
+
+    }
+});
+
+
+
+  
+
+//var h_name="abcd hospital";
+
+    // Add a new document in collection "cities"
+/*
+db.collection("doctors").doc(d_id).set({
+    d_name: name,
+    d_specialization:qlf,
+    d_area:ctg,
+    d_id:d_id,
+    d_age:exp,
+    d_email:email,
+    h_id:h_id,
+    h_name:h_name,
+})
+.then(() => {
+    alert("Document successfully written!");
+    window.location="homepage.html";
+})
+.catch((error) => {
+    alert("Error writing document: ", error);
+});*/
+
+}
+
+function update(){
+    var name=document.getElementById("name").value;
+    var email=document.getElementById("email").value;
+    var exp=document.getElementById("exp").value;
+    var qlf=document.getElementById("qlf").value;
+    var ctg=document.getElementById("ctg").value;
+    var d_id1=document.getElementById("d_id").value;
+    var h_id=sessionStorage.getItem('h_id');
+    var l=d_id1.length;
+  
+  if(l<2){
+    d_id1='0'+d_id1;
+  }
+  
+  var d_id=h_id+d_id1;
+  alert("Doctor ID: "+d_id);  
+     
+
+// Set the "capital" field of the city 'DC'
+db.collection("doctors").doc(d_id).update({
+    d_name: name,
+    d_specialization:qlf,
+    d_area:ctg,
+    d_age:exp,
+    d_email:email,
+})
+.then(() => {
+    alert("Document successfully updated!");
+    window.location="homepage.html";
+})
+.catch((error) => {
+    // The document probably doesn't exist.
+    alert("Error updating document: ", error);
+});
+
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Login and Registration Form</title>
+  <link rel="stylesheet" href="login-register.css">
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  
+
+
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<!--
+<script type="text/javascript" src="firebase.js"></script>
+-->
+
+  <!--
+  <script type="text/javascript" src="login-register.js"></script>
+   -->
+  
+</head>
+<body>
+  
+  <div class="hero">
+
+  
+    <div class="form-box">
+      
+       <div class="button-box">
+        <div id="btn"></div>
+         <button type="button" class="toggle-btn" onclick="JavaScript:loginButton()">Log In</button>
+         <button type="button" class="toggle-btn" onclick="JavaScript:registerButton()">Register</button>
+       </div>
+       <div id="login" class="input-group">
+        <input type="text" class="input-field" id="h_id1" placeholder="Hospital ID" maxlength="9" minlength="9" required>
+        <input type="email" class="input-field" id="email1" placeholder="E-mail" required>
+         <input type="password" class="input-field" id="password1" placeholder="Enter password" required>
+         <button type="submit" class="submit-btn" onclick="JavaScript:login()">Log in</button>
+       </div>
+
+        <div id="register" class="input-group">
+           <input type="text" class="input-field" id="hname" placeholder="Hospital Name" required>
+        <input type="text" class="input-field" id="email2" placeholder="E-mail" required>
+         <input type="password" class="input-field" id="password2" placeholder="Enter password" required>
+          <input type="text" class="input-field" id="addr" placeholder="Address" required>
+           <input type="text" class="input-field" id="pin" placeholder="Pincode" required>
+           <input type="text" class="input-field" id="h_id2" placeholder="Select Hospital ID (1 to 999)" maxlength="3" minlength="3" required >
+         <button type="submit" class="submit-btn" onclick="JavaScript:register()">Register</button>
+
+        </div>
+
+    </div>
+
+    
+  </div>
+
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyBYK0eooSqAG58zVar-w7gNGQAPnOeeEo8",
+    authDomain: "sample-project-1062021.firebaseapp.com",
+    projectId: "sample-project-1062021",
+    storageBucket: "sample-project-1062021.appspot.com",
+    messagingSenderId: "145333304522",
+    appId: "1:145333304522:web:c642e3c6708c6a7df78833",
+    measurementId: "G-DNW7B4YDG0"
+  
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  const userauth=firebase.auth();
+  const db=firebase.firestore();
+
+  db.settings({timestampsInSnapshots: true});
+</script>
+
+
+
+<script>
+  var x= document.getElementById("login");
+  var y= document.getElementById("register");
+  var z= document.getElementById("btn");
+
+  
+ 
+
+  function registerButton() {
+    // body...
+    x.style.left= "-400px";
+    y.style.left= "50px";
+    z.style.left= "110px";
+
+  }
+  function loginButton() {
+    // body...
+    x.style.left= "50px";
+    y.style.left= "450px";
+    z.style.left= "0";
+    
+  }
+  function login(){
+    //window.location.replace("homepage.html");
+    var h_id1=document.getElementById("h_id1").value;
+    var email1=document.getElementById("email1").value;
+  var password1=document.getElementById("password1").value;
+  sessionStorage.setItem("h_id", h_id1);
+    userauth.signInWithEmailAndPassword(email1, password1)
+    
+  .then((userCredential) => {
+    // Signed in
+    var user = userCredential.user;
+    // ...
+    if(user!=null){
+      alert("Successful");
+      window.location.replace("homepage.html");
+    }
+    else{
+      alert("error");
+    }
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    alert("Error occured when login into your account.");
+  
+  });
+
+  }
+  function register(){
+    var hname=document.getElementById("hname").value;
+     var email2=document.getElementById("email2").value;
+  var password2=document.getElementById("password2").value;
+  var addr=document.getElementById("addr").value;
+  var pin=document.getElementById("pin").value;
+  var h_id2=document.getElementById("h_id2").value;
+//alert(email2);
+  var l=h_id2.length;
+  
+  if(l<3){
+    for(var i=0;i<3-l;i++)
+    h_id2='0'+h_id2;
+  }
+  
+  var h_id=pin+h_id2;
+  alert(h_id);  
+  sessionStorage.setItem("h_id", h_id);
+  const usersRef = db.collection('hospital').doc(h_id);
+
+usersRef.get()
+  .then((docSnapshot) => {
+    if (docSnapshot.exists) {
+      alert("Hospital ID already taken!!! Try choosing another ID.😊😊");
+      return;
+    } else {
+     // usersRef.set({...}) // create the document
+     userauth.createUserWithEmailAndPassword(email2,password2)
+  .then((userCredential) => {
+    // Signed in 
+    var user = userCredential.user;
+    // ...
+    if(user!=null){
+      //alert("Authentication Successful");
+      console.log(user);
+    }
+    else{
+      alert("error");
+    }
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // ..
+    alert("Error occured when creating account.");
+//email2, password2)
+  });
+
+
+  /*db.collection("hospital").doc(h_id).set({
+    name: hname,
+    h_id:h_id,
+    pin:pin,
+    addr:addr,
+    email:email2,
+})
+.then(() => {
+    alert("Account Created!!!");
+    window.location="homepage.html";
+})
+.catch((error) => {
+    // The document probably doesn't exist.
+    alert("Error updating document: ", error);
+});*/
+
+db.collection("hospital").doc(h_id).set({
+  name: hname,
+    h_id:h_id,
+    pin:pin,
+    addr:addr,
+    email:email2,
+    
+})
+.then(() => {
+    alert("Account successfully created!!");
+    window.location.replace("homepage.html");
+})
+.catch((error) => {
+    alert("Error writing document: ", error);
+});
+
+    }
+});
+
+
+
+/*
+
+name: hname,
+    h_id:h_id,
+    pin:pin,
+    addr:addr,
+    email:email2,
+
+
+  alert(db.collection("hospital").doc(h_id).get().exists);
+  if(db.collection("hospital").doc(h_id).get()){
+   alert("Hospital ID already taken!!! Try choosing another ID.");
+   return;
+  }
+
+
+   userauth.createUserWithEmailAndPassword(email2,password2)
+  .then((userCredential) => {
+    // Signed in 
+    var user = userCredential.user;
+    // ...
+    if(user!=null){
+      alert("Successful");
+      console.log(user);
+    }
+    else{
+      alert("error");
+    }
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // ..
+    alert("Error occured when creating account.");
+//email2, password2)
+  });*/
+   
+  }
+  
+</script>
+
+
+</body>
+</html>
